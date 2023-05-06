@@ -1,9 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
 class Address(models.Model):
     main = models.CharField(max_length=30)
-    complement = models.CharField(max_length=30)
+    complement = models.CharField(max_length=30, blank=True)
     postal_code = models.CharField(max_length=30)
     city = models.CharField(max_length=30)
 
@@ -14,7 +15,7 @@ class InstructorData(models.Model):
     institution_name = models.CharField(max_length=30)
 
 
-class User(models.Model):
+class User(AbstractUser):
     PROFILES = [
         ("STU", "Student"),
         ("EMP", "Employee"),
@@ -25,8 +26,6 @@ class User(models.Model):
     address = models.ForeignKey(Address, on_delete=models.PROTECT)
     birth_date = models.DateField()
     profile = models.CharField(max_length=3, choices=PROFILES)
-    login = models.CharField(max_length=30, unique=True)
-    password = models.CharField(max_length=100)
 
 
 class Pilot(models.Model):
