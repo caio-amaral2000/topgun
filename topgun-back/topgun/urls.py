@@ -1,8 +1,13 @@
 from django.urls import path
+
 from topgun import views
 
 urlpatterns = [
-    path('auth/signup',
+    path('register',
          views.register_user,
-         name='register_user')
+         name='register_user'),
+
+    path('login/',
+         views.LoginView.as_view(),
+         name='login_user'),
 ]
