@@ -18,8 +18,10 @@ from topgun import serializers
 @csrf_exempt
 @permission_classes([AllowAny])
 def register_user(request):
-    data = json.loads(request.data['user'])
+    data = request.data
     data['profile'] = 'STU'
+    data['address'] = {'main': data['main'], 'complement': data['complement'], 'postal_code': data['postal_code'], 'city': data['city']}
+
     serializer = serializers.UserRegistrationSerializer(data=data)
     if serializer.is_valid():
         serializer.save()

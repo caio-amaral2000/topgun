@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
@@ -14,10 +14,16 @@ function Register() {
 
     // form validation rules 
     const validationSchema = Yup.object().shape({
-        firstName: Yup.string()
-            .required('First Name is required'),
-        lastName: Yup.string()
-            .required('Last Name is required'),
+        name: Yup.string()
+            .required('Name is required'),
+        main: Yup.string()
+            .required('Address is required'),
+        postal_code: Yup.string()
+            .required('Postal Code is required'),
+        city: Yup.string()
+            .required('City is required'),
+        birth_date: Yup.string()
+            .required('Birth Date is required'),
         username: Yup.string()
             .required('Username is required'),
         password: Yup.string()
@@ -46,14 +52,34 @@ function Register() {
                 <div className="card-body">
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
-                            <label>First Name</label>
-                            <input name="firstName" type="text" {...register('firstName')} className={`form-control ${errors.firstName ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.firstName?.message}</div>
+                            <label>Name</label>
+                            <input name="name" type="text" {...register('name')} className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.name?.message}</div>
                         </div>
                         <div className="form-group">
-                            <label>Last Name</label>
-                            <input name="lastName" type="text" {...register('lastName')} className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.lastName?.message}</div>
+                            <label>Address</label>
+                            <input name="main" type="text" {...register('main')} className={`form-control ${errors.main ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.main?.message}</div>
+                        </div>
+                        <div className="form-group">
+                            <label>Complement</label>
+                            <input name="complement" type="text" {...register('complement')} className={`form-control ${errors.complement ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.complement?.message}</div>
+                        </div>
+                        <div className="form-group">
+                            <label>Postal Code</label>
+                            <input name="postal_code" type="text" {...register('postal_code')} className={`form-control ${errors.postal_code ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.postal_code?.message}</div>
+                        </div>
+                        <div className="form-group">
+                            <label>City</label>
+                            <input name="city" type="text" {...register('city')} className={`form-control ${errors.city ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.city?.message}</div>
+                        </div>
+                        <div className="form-group">
+                            <label>Birth Date</label>
+                            <input name="birth_date" type="date" {...register('birth_date')} className={`form-control ${errors.birth_date ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.birth_date?.message}</div>
                         </div>
                         <div className="form-group">
                             <label>Username</label>

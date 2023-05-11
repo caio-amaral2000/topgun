@@ -4,6 +4,8 @@ import { userService } from 'services';
 
 const { publicRuntimeConfig } = getConfig();
 
+const baseUrl = "http://127.0.0.1:8000";
+
 export const fetchWrapper = {
     get,
     post,
@@ -53,7 +55,7 @@ function authHeader(url) {
     // return auth header with jwt if user is logged in and request is to the api url
     const user = userService.userValue;
     const isLoggedIn = user && user.token;
-    const isApiUrl = url.startsWith("http://127.0.0.1:8000");
+    const isApiUrl = url.startsWith(baseUrl);
     if (isLoggedIn && isApiUrl) {
         return { Authorization: `Bearer ${user.token}` };
     } else {
