@@ -57,7 +57,7 @@ function authHeader(url) {
     const isLoggedIn = user && user.token;
     const isApiUrl = url.startsWith(baseUrl);
     if (isLoggedIn && isApiUrl) {
-        return { Authorization: `Bearer ${user.token}` };
+        return { Authorization: `JWT ${user.token}` };
     } else {
         return {};
     }
