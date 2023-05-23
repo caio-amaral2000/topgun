@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import datetime
 from pathlib import Path
 import django
 from django.utils.translation import gettext
@@ -160,3 +160,7 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'topgun.User'
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1)
+}
