@@ -162,5 +162,5 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'topgun.User'
 
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1)
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1)
 }

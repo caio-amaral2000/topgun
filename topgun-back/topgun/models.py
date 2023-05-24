@@ -29,9 +29,8 @@ class User(AbstractUser):
 
 
 class Pilot(models.Model):
-    license_number = models.IntegerField(unique=True)
-    instructor_data = models.ForeignKey(InstructorData, on_delete=models.PROTECT)
-    institution_name = models.CharField(max_length=30)
+    license_number = models.IntegerField(unique=True, null=True)
+    instructor_data = models.ForeignKey(InstructorData, on_delete=models.PROTECT, null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
 
 
