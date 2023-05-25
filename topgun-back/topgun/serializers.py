@@ -37,9 +37,18 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class FlightSerializer(serializers.ModelSerializer):
+    pilot = serializers.SerializerMethodField()
+    instructor = serializers.SerializerMethodField()
+
     class Meta:
         model = Flight
         fields = ('start_date', 'duration', 'grade', 'instructor', 'pilot')
+
+    def get_pilot(self, flight):
+        return flight.pilot.user.username
+
+    def get_instructor(self, flight):
+        return flight.instructor.user.username if flight.instructor is not None else None
 
 
 class PilotSerializer(serializers.ModelSerializer):

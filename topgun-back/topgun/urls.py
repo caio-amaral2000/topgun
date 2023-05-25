@@ -27,4 +27,8 @@ urlpatterns = [
          views.get_pilot_data,
          name='get_pilot_data'),
 
+    path('instructed-flights',
+         views.get_instructed_flights,
+         name='get_instructed_flights'),
+
 ]

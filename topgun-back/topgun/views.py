@@ -95,10 +95,10 @@ def create_flight(request, user_id):
 
     return Response(status=status.HTTP_201_CREATED)
 
+
 @api_view(['GET'])
 @permission_classes([EmployeePermission | InstructorPermission])
 def get_users(request):
-
     serializer = serializers.UserSerializer
 
     if request.user.profile == 'EMP':
@@ -110,6 +110,7 @@ def get_users(request):
         users = get_user_model().objects.filter(profile='STU')
         serialized_users = serializer(users, many=True)
         return Response(data=serialized_users.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -133,6 +134,14 @@ def get_pilot_data(request, user_id):
     return Response(data=data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([InstructorPermission])
+def get_instructed_flights(request):
+    flights = Flight.objects.filter(instructor_id=request.user.id)
+    serializer = serializers.FlightSerializer
+
+    data = serializer(flights, many=True).data
+    return Response(data=data, status=status.HTTP_200_OK)
 
 
 class LoginView(ObtainJSONWebToken):
