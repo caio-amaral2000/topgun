@@ -43,7 +43,7 @@ class Flight(models.Model):
         ("F", "Failure"),
     ]
     start_date = models.DateField()
-    end_date = models.DateField()
-    instructor = models.ForeignKey(Pilot, related_name="instructor", on_delete=models.PROTECT)
-    grade = models.CharField(max_length=1, choices=GRADES)
+    duration = models.IntegerField()
+    instructor = models.ForeignKey(Pilot, related_name="instructor", on_delete=models.PROTECT, null=True)
+    grade = models.CharField(max_length=1, choices=GRADES, null=True)
     pilot = models.ForeignKey(Pilot, related_name="pilot", on_delete=models.PROTECT)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from topgun.models import User, Address, Pilot, InstructorData
+from topgun.models import User, Address, Pilot, InstructorData, Flight
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -34,6 +34,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'name', 'address', 'birth_date', 'username', 'profile')
+
+
+class FlightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flight
+        fields = ('start_date', 'end_date', 'grade', 'instructor', 'pilot')
 
 
 class PilotCreationSerializer(serializers.ModelSerializer):

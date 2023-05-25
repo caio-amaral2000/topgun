@@ -15,4 +15,8 @@ urlpatterns = [
          views.create_user_pilot,
          name='create_pilot'),
 
+    path('create-flight/<int:user_id>',
+         views.create_flight,
+         name='create_flight'),
+
 ]
