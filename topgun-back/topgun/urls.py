@@ -23,4 +23,8 @@ urlpatterns = [
          views.get_users,
          name='get_users'),
 
+    path('pilot-data/<int:user_id>',
+         views.get_pilot_data,
+         name='get_pilot_data'),
+
 ]

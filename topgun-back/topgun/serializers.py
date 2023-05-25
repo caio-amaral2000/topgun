@@ -39,7 +39,15 @@ class UserSerializer(serializers.ModelSerializer):
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
-        fields = ('start_date', 'end_date', 'grade', 'instructor', 'pilot')
+        fields = ('start_date', 'duration', 'grade', 'instructor', 'pilot')
+
+
+class PilotSerializer(serializers.ModelSerializer):
+    instructor_data = InstructorDataSerializer()
+
+    class Meta:
+        model = Pilot
+        fields = ('license_number', 'instructor_data')
 
 
 class PilotCreationSerializer(serializers.ModelSerializer):

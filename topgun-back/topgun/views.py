@@ -1,14 +1,15 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_jwt.views import ObtainJSONWebToken
 
 from topgun import serializers
 from topgun.authentication import EmployeePermission, InstructorPermission
-from topgun.models import Pilot
+from topgun.models import Pilot, Flight
 
 
 # Create your views here.
@@ -101,7 +102,7 @@ def get_users(request):
     serializer = serializers.UserSerializer
 
     if request.user.profile == 'EMP':
-        users = get_user_model().objects.all()
+        users = get_user_model().objects.filter(Q(profile='INS') | Q(profile='PIL') | Q(profile='STU'))
         serialized_users = serializer(users, many=True)
         return Response(data=serialized_users.data, status=status.HTTP_200_OK)
 
@@ -109,6 +110,29 @@ def get_users(request):
         users = get_user_model().objects.filter(profile='STU')
         serialized_users = serializer(users, many=True)
         return Response(data=serialized_users.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_pilot_data(request, user_id):
+    user_pilot = get_user_model().objects.get(id=user_id)
+    pilot = Pilot.objects.get(user_id=user_id)
+    flights = Flight.objects.filter(pilot_id=pilot.id)
+
+    serializer_pilot = serializers.PilotSerializer
+    serializer_flight = serializers.FlightSerializer
+
+    if request.user.profile == 'INS' and user_pilot.profile != 'STU':
+        return Response({"message": 'Instructors cannot register non-student flights'},
+                        status=status.HTTP_403_FORBIDDEN)
+    elif request.user.profile != 'EMP' and request.user.id != user_id:
+        return Response({"message": 'You cannot see the pilot data of another user'},
+                        status=status.HTTP_403_FORBIDDEN)
+
+    data = serializer_pilot(pilot).data
+    data['flights'] = serializer_flight(flights, many=True).data
+    return Response(data=data, status=status.HTTP_200_OK)
+
+
 
 
 class LoginView(ObtainJSONWebToken):
