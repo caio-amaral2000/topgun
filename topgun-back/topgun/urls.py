@@ -19,4 +19,8 @@ urlpatterns = [
          views.create_flight,
          name='create_flight'),
 
+    path('users',
+         views.get_users,
+         name='get_users'),
+
 ]
