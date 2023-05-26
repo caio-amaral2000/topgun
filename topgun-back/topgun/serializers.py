@@ -36,6 +36,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'address', 'birth_date', 'username', 'profile')
 
 
+class FlightCreationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flight
+        fields = ('start_date', 'duration', 'grade', 'instructor', 'pilot')
+
+
 class FlightSerializer(serializers.ModelSerializer):
     pilot = serializers.SerializerMethodField()
     instructor = serializers.SerializerMethodField()
@@ -53,10 +59,14 @@ class FlightSerializer(serializers.ModelSerializer):
 
 class PilotSerializer(serializers.ModelSerializer):
     instructor_data = InstructorDataSerializer()
+    flight_hours = serializers.SerializerMethodField()
 
     class Meta:
         model = Pilot
-        fields = ('license_number', 'instructor_data')
+        fields = ('license_number', 'instructor_data', 'flight_hours')
+
+    def get_flight_hours(self, pilot):
+        return pilot.get_flight_hours()
 
 
 class PilotCreationSerializer(serializers.ModelSerializer):

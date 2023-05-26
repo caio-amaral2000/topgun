@@ -31,4 +31,12 @@ urlpatterns = [
          views.get_instructed_flights,
          name='get_instructed_flights'),
 
+    path('promote/<int:user_id>',
+         views.promote_pilot,
+         name='promote_pilot'),
+
+    path('graduate/<int:user_id>',
+         views.graduate_student,
+         name='graduate_student'),
+
 ]

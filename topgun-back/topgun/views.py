@@ -87,7 +87,7 @@ def create_flight(request, user_id):
             return Response({"message": 'Data provided not valid for registering a non-student flight'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-    serializer = serializers.FlightSerializer(data=data)
+    serializer = serializers.FlightCreationSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
     else:
@@ -142,6 +142,44 @@ def get_instructed_flights(request):
 
     data = serializer(flights, many=True).data
     return Response(data=data, status=status.HTTP_200_OK)
+
+
+@api_view(['PUT'])
+@permission_classes([InstructorPermission])
+def graduate_student(request, user_id):
+    user_pilot = get_user_model().objects.filter(id=user_id)
+    pilot = Pilot.objects.filter(user_id=user_id)
+
+    if user_pilot.profile != 'STU':
+        return Response({"message": "User is not a student"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if pilot.get_flight_hours() >= 150:
+        pilot.update(license_number=request.data["license_number"])
+        user_pilot.update(profile='PIL')
+    else:
+        return Response({"message": "Student has not completed the mandatory flight hours"},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['PUT'])
+@permission_classes([EmployeePermission])
+def promote_pilot(request, user_id):
+    user_pilot = get_user_model().objects.filter(id=user_id)
+    pilot = Pilot.objects.filter(user_id=user_id)
+
+    if user_pilot.profile != 'PIL':
+        return Response({"message": "User is not a pilot"}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = serializers.InstructorDataSerializer(data=request.data)
+    if serializer.is_valid():
+        pilot.update(instructor_data=serializer.save())
+        user_pilot.update(profile='INS')
+    else:
+        return Response({"message": str(serializer.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(status=status.HTTP_200_OK)
 
 
 class LoginView(ObtainJSONWebToken):
