@@ -9,8 +9,14 @@ export default Index;
 function Index() {
     const [users, setUsers] = useState(null);
 
+    const profileLabel = {
+        'STU': 'Student',
+        'PIL': 'Pilot',
+        'INS': 'Instructor',
+    }
+
     useEffect(() => {
-        userService.getAll().then(x => setUsers(x));
+        userService.getUsers().then(x => setUsers(x));
     }, []);
 
     function deleteUser(id) {
@@ -30,26 +36,20 @@ function Index() {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th style={{ width: '30%' }}>First Name</th>
-                        <th style={{ width: '30%' }}>Last Name</th>
+                        <th style={{ width: '30%' }}>Name</th>
                         <th style={{ width: '30%' }}>Username</th>
+                        <th style={{ width: '30%' }}>Profile</th>
                         <th style={{ width: '10%' }}></th>
                     </tr>
                 </thead>
                 <tbody>
                     {users && users.map(user =>
                         <tr key={user.id}>
-                            <td>{user.firstName}</td>
-                            <td>{user.lastName}</td>
+                            <td>{user.name}</td>
                             <td>{user.username}</td>
+                            <td>{profileLabel[user.profile]}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
-                                <Link href={`/users/edit/${user.id}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
-                                <button onClick={() => deleteUser(user.id)} className="btn btn-sm btn-danger btn-delete-user" disabled={user.isDeleting}>
-                                    {user.isDeleting 
-                                        ? <span className="spinner-border spinner-border-sm"></span>
-                                        : <span>Delete</span>
-                                    }
-                                </button>
+                                <Link href={{pathname: `/users/edit/${user.id}`, query: user}} className="btn btn-sm btn-primary mr-1">Details</Link>
                             </td>
                         </tr>
                     )}
