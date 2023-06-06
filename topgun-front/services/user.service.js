@@ -14,6 +14,7 @@ export const userService = {
     login,
     logout,
     register,
+    createPilot,
     getAll,
     getById,
     update,
@@ -39,6 +40,10 @@ function logout() {
 
 function register(user) {
     return fetchWrapper.post(`${baseUrl}/register`, user);
+}
+
+function createPilot(user) {
+    return fetchWrapper.post(`${baseUrl}/create-pilot`, user);
 }
 
 function getAll() {
