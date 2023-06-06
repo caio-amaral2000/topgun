@@ -49,7 +49,7 @@ function Index() {
                             <td>{user.username}</td>
                             <td>{profileLabel[user.profile]}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
-                                <Link href={{pathname: `/users/edit/${user.id}`, query: user}} className="btn btn-sm btn-primary mr-1">Details</Link>
+                                <Link href={`/users/edit/${user.id}`} className="btn btn-sm btn-primary mr-1">Details</Link>
                             </td>
                         </tr>
                     )}

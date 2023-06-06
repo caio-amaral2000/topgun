@@ -119,6 +119,7 @@ def get_pilot_data(request, user_id):
     pilot = Pilot.objects.get(user_id=user_id)
     flights = Flight.objects.filter(pilot_id=pilot.id)
 
+    serializer_user = serializers.UserSerializer
     serializer_pilot = serializers.PilotSerializer
     serializer_flight = serializers.FlightSerializer
 
@@ -131,6 +132,7 @@ def get_pilot_data(request, user_id):
 
     data = serializer_pilot(pilot).data
     data['flights'] = serializer_flight(flights, many=True).data
+    data['user'] = serializer_user(user_pilot).data
     return Response(data=data, status=status.HTTP_200_OK)
 
 

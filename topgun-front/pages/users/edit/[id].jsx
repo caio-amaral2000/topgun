@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Layout, AddEdit } from 'components/users';
+import { Layout, PilotData } from 'components/users';
 import { Spinner } from 'components';
 import { userService, alertService } from 'services';
 import { useRouter } from 'next/router';
@@ -8,9 +8,6 @@ export default Edit;
 
 function Edit({ id }) {
     const [pilotData, setPilotData] = useState(null);
-
-    const router = useRouter()
-    const user = router.query
 
     useEffect(() => {
         // fetch user and set default form values if in edit mode
@@ -23,8 +20,7 @@ function Edit({ id }) {
 
     return (
         <Layout>
-            <h1>Edit User</h1>
-            {user ? <AddEdit user={user} /> : <Spinner /> }
+            {pilotData ? <PilotData pilotData={pilotData} /> : <Spinner /> }
         </Layout>
     );
 }
