@@ -16,12 +16,15 @@ function Register() {
     const validationSchema = Yup.object().shape({
         name: Yup.string()
             .required('Name is required'),
-        main: Yup.string()
-            .required('Address is required'),
-        postal_code: Yup.string()
-            .required('Postal Code is required'),
-        city: Yup.string()
-            .required('City is required'),
+        address: Yup.object().shape({
+            main: Yup.string()
+                .required('Address is required'),
+            complement: Yup.string(),
+            postal_code: Yup.string()
+                .required('Postal Code is required'),
+            city: Yup.string()
+                .required('City is required'),
+        }),
         birth_date: Yup.string()
             .required('Birth Date is required'),
         username: Yup.string()
@@ -58,23 +61,23 @@ function Register() {
                         </div>
                         <div className="form-group">
                             <label>Address</label>
-                            <input name="main" type="text" {...register('main')} className={`form-control ${errors.main ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.main?.message}</div>
+                            <input name="main" type="text" {...register('address.main')} className={`form-control ${errors.address?.main ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.address?.main?.message}</div>
                         </div>
                         <div className="form-group">
                             <label>Complement</label>
-                            <input name="complement" type="text" {...register('complement')} className={`form-control ${errors.complement ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.complement?.message}</div>
+                            <input name="complement" type="text" {...register('address.complement')} className={`form-control ${errors.address?.complement ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.address?.complement?.message}</div>
                         </div>
                         <div className="form-group">
                             <label>Postal Code</label>
-                            <input name="postal_code" type="text" {...register('postal_code')} className={`form-control ${errors.postal_code ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.postal_code?.message}</div>
+                            <input name="postal_code" type="text" {...register('address.postal_code')} className={`form-control ${errors.address?.postal_code ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.address?.postal_code?.message}</div>
                         </div>
                         <div className="form-group">
                             <label>City</label>
-                            <input name="city" type="text" {...register('city')} className={`form-control ${errors.city ? 'is-invalid' : ''}`} />
-                            <div className="invalid-feedback">{errors.city?.message}</div>
+                            <input name="city" type="text" {...register('address.city')} className={`form-control ${errors.address?.city ? 'is-invalid' : ''}`} />
+                            <div className="invalid-feedback">{errors.address?.city?.message}</div>
                         </div>
                         <div className="form-group">
                             <label>Birth Date</label>

@@ -36,7 +36,7 @@ function Graduate(props) {
         return userService.graduateStudent(id, data)
             .then(() => {
                 alertService.success('Student graduated to pilot', { keepAfterRouteChange: true });
-                router.push('.');
+                router.push('..');
             })
             .catch(alertService.error);
     }

@@ -18,38 +18,38 @@ function AddEdit(props) {
     const validationSchema = Yup.object().shape({
         name: Yup.string()
             .required('Name is required'),
-        main: Yup.string()
-            .required('Address is required'),
-        postal_code: Yup.string()
-            .required('Postal Code is required'),
-        city: Yup.string()
-            .required('City is required'),
+        address: Yup.object().shape({
+            main: Yup.string()
+                .required('Address is required'),
+            complement: Yup.string(),
+            postal_code: Yup.string()
+                .required('Postal Code is required'),
+            city: Yup.string()
+                .required('City is required'),
+        }),
         birth_date: Yup.string()
             .required('Birth Date is required'),
         profile: Yup.string()
             .required('Profile is required'),
         license_number: Yup.number()
             .when('profile', {
-                is: ('PIL' || 'INS'),
+                is: (profile) => profile === "PIL" || profile === "INS",
                 then: Yup.number()
                     .typeError("Please enter a valid number")
                     .required('License number is required')
                     .min(1,"License number must be positive")
             }),
-        institution_name: Yup.string()
+        instructor_data: Yup.object()
             .when('profile', {
                 is: 'INS',
-                then: Yup.string().required('Must enter institution name'),
-            }),
-        course_name: Yup.string()
-            .when('profile', {
-                is: 'INS',
-                then: Yup.string().required('Must enter course name'),
-            }),
-        graduation_date: Yup.string()
-            .when('profile', {
-                is: 'INS',
-                then: Yup.string().required('Must enter graduation date'),
+                then: Yup.object().shape({
+                    institution_name: Yup.string()
+                        .required('Must enter institution name'),
+                    course_name: Yup.string()
+                        .required('Must enter course name'),
+                    graduation_date: Yup.string()
+                        .required('Must enter graduation date'),
+                })
             }),
         username: Yup.string()
             .required('Username is required'),
@@ -108,23 +108,23 @@ function AddEdit(props) {
             </div>
             <div className="form-group">
                 <label>Address</label>
-                <input name="main" type="text" {...register('main')} className={`form-control ${errors.main ? 'is-invalid' : ''}`} />
-                <div className="invalid-feedback">{errors.main?.message}</div>
+                <input name="main" type="text" {...register('address.main')} className={`form-control ${errors.address?.main ? 'is-invalid' : ''}`} />
+                <div className="invalid-feedback">{errors.address?.main?.message}</div>
             </div>
             <div className="form-group">
                 <label>Complement</label>
-                <input name="complement" type="text" {...register('complement')} className={`form-control ${errors.complement ? 'is-invalid' : ''}`} />
-                <div className="invalid-feedback">{errors.complement?.message}</div>
+                <input name="complement" type="text" {...register('address.complement')} className={`form-control ${errors.address?.complement ? 'is-invalid' : ''}`} />
+                <div className="invalid-feedback">{errors.address?.complement?.message}</div>
             </div>
             <div className="form-group">
                 <label>Postal Code</label>
-                <input name="postal_code" type="text" {...register('postal_code')} className={`form-control ${errors.postal_code ? 'is-invalid' : ''}`} />
-                <div className="invalid-feedback">{errors.postal_code?.message}</div>
+                <input name="postal_code" type="text" {...register('address.postal_code')} className={`form-control ${errors.address?.postal_code ? 'is-invalid' : ''}`} />
+                <div className="invalid-feedback">{errors.address?.postal_code?.message}</div>
             </div>
             <div className="form-group">
                 <label>City</label>
-                <input name="city" type="text" {...register('city')} className={`form-control ${errors.city ? 'is-invalid' : ''}`} />
-                <div className="invalid-feedback">{errors.city?.message}</div>
+                <input name="city" type="text" {...register('address.city')} className={`form-control ${errors.address?.city ? 'is-invalid' : ''}`} />
+                <div className="invalid-feedback">{errors.address?.city?.message}</div>
             </div>
             <div className="form-group">
                 <label>Birth Date</label>
@@ -151,22 +151,22 @@ function AddEdit(props) {
             {selectedProfile === 'INS' && (
                 <div className="form-group">
                     <label>Institution name</label>
-                    <input name="institution_name" type="text" {...register('institution_name')} className={`form-control ${errors.institution_name ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.institution_name?.message}</div>
+                    <input name="institution_name" type="text" {...register('instructor_data.institution_name')} className={`form-control ${errors.instructor_data?.institution_name ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.instructor_data?.institution_name?.message}</div>
                 </div>
             )}
             {selectedProfile === 'INS' && (
                 <div className="form-group">
                     <label>Course name</label>
-                    <input name="course_name" type="text" {...register('course_name')} className={`form-control ${errors.course_name ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.course_name?.message}</div>
+                    <input name="course_name" type="text" {...register('instructor_data.course_name')} className={`form-control ${errors.instructor_data?.course_name ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.instructor_data?.course_name?.message}</div>
                 </div>
             )}
             {selectedProfile === 'INS' && (
                 <div className="form-group">
                     <label>Graduation date</label>
-                    <input name="graduation_date" type="date" {...register('graduation_date')} className={`form-control ${errors.graduation_date ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.graduation_date?.message}</div>
+                    <input name="graduation_date" type="date" {...register('instructor_data.graduation_date')} className={`form-control ${errors.instructor_data?.graduation_date ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.instructor_data?.graduation_date?.message}</div>
                 </div>
             )}
             <div className="form-group">

@@ -21,8 +21,6 @@ from topgun.models import Pilot, Flight
 def register_user(request):
     data = request.data
     data['profile'] = 'EMP'
-    data['address'] = {'main': data['main'], 'complement': data['complement'], 'postal_code': data['postal_code'],
-                       'city': data['city']}
 
     serializer = serializers.UserRegistrationSerializer(data=data)
     if serializer.is_valid():
@@ -37,25 +35,18 @@ def register_user(request):
 @permission_classes([EmployeePermission])
 def create_user_pilot(request):
     data = request.data
-    data['address'] = {'main': data['main'], 'complement': data['complement'], 'postal_code': data['postal_code'],
-                       'city': data['city']}
     data['user'] = {'name': data['name'], 'address': data['address'], 'birth_date': data['birth_date'],
                     'username': data['username'], 'password': data['password'], 'profile': data['profile']}
 
     if data['profile'] == 'STU':
-        if 'license_number' in data:
-            return Response({"message": 'Students cannot have a license number'}, status=status.HTTP_400_BAD_REQUEST)
+        if 'license_number' in data or 'instructor_data' in data:
+            return Response({"message": 'Wrong data provided for student'}, status=status.HTTP_400_BAD_REQUEST)
     elif data['profile'] == 'PIL':
-        if 'license_number' not in data:
-            return Response({"message": 'License number not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        if 'license_number' not in data or 'instructor_data' in data:
+            return Response({"message": 'Wrong data provided for pilot'}, status=status.HTTP_400_BAD_REQUEST)
     elif data['profile'] == 'INS':
-        if 'license_number' not in data:
-            return Response({"message": 'License number not provided'}, status=status.HTTP_400_BAD_REQUEST)
-        if 'graduation_date' in data and 'course_name' in data and 'institution_name' in data:
-            data['instructor_data'] = {'graduation_date': data['graduation_date'], 'course_name': data['course_name'],
-                                       'institution_name': data['institution_name']}
-        else:
-            return Response({"message": 'Instructor data not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        if 'license_number' not in data or 'instructor_data' not in data:
+            return Response({"message": 'Wrong data provided for instructor'}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({"message": 'Profile code not valid'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -74,14 +65,13 @@ def create_flight(request, user_id):
     data = request.data
     user_pilot = get_user_model().objects.get(id=user_id)
     pilot_id = Pilot.objects.get(user_id=user_id).id
-    instructor_id = Pilot.objects.get(user_id=request.user.id).id
     data['pilot'] = pilot_id
 
     if user_pilot.profile == 'STU':
         if request.user.profile != 'INS' or 'grade' not in data:
             return Response({"message": 'Data provided not valid for registering a student flight'},
                             status=status.HTTP_400_BAD_REQUEST)
-        data['instructor'] = instructor_id
+        data['instructor'] = Pilot.objects.get(user_id=request.user.id).id
     else:
         if request.user.profile != 'EMP' or 'grade' in data or 'instructor' in data:
             return Response({"message": 'Data provided not valid for registering a non-student flight'},
@@ -145,7 +135,7 @@ def get_instructed_flights(request, user_id):
     serializer = serializers.FlightSerializer
 
     if request.user.profile == 'INS' and request.user.id != user_id:
-        return Response({"message": 'Instructors cannot see other instructors\' instructed flights'},
+        return Response({"message": 'Instructors cannot see other instructors\' flights'},
                         status=status.HTTP_403_FORBIDDEN)
 
     data = serializer(flights, many=True).data
