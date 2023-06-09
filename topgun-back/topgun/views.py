@@ -74,14 +74,14 @@ def create_flight(request, user_id):
     data = request.data
     user_pilot = get_user_model().objects.get(id=user_id)
     pilot_id = Pilot.objects.get(user_id=user_id).id
+    instructor_id = Pilot.objects.get(user_id=request.user.id).id
     data['pilot'] = pilot_id
 
     if user_pilot.profile == 'STU':
         if request.user.profile != 'INS' or 'grade' not in data:
             return Response({"message": 'Data provided not valid for registering a student flight'},
                             status=status.HTTP_400_BAD_REQUEST)
-        data['instructor'] = request.user.id
-
+        data['instructor'] = instructor_id
     else:
         if request.user.profile != 'EMP' or 'grade' in data or 'instructor' in data:
             return Response({"message": 'Data provided not valid for registering a non-student flight'},
@@ -123,12 +123,13 @@ def get_pilot_data(request, user_id):
     serializer_pilot = serializers.PilotSerializer
     serializer_flight = serializers.FlightSerializer
 
-    if request.user.profile == 'INS' and user_pilot.profile != 'STU':
-        return Response({"message": 'Instructors cannot register non-student flights'},
-                        status=status.HTTP_403_FORBIDDEN)
-    elif request.user.profile != 'EMP' and request.user.id != user_id:
-        return Response({"message": 'You cannot see the pilot data of another user'},
-                        status=status.HTTP_403_FORBIDDEN)
+    if request.user.id != user_id:
+        if request.user.profile == 'INS' and user_pilot.profile != 'STU':
+            return Response({"message": 'Instructors cannot see the pilot data of non-student users'},
+                            status=status.HTTP_403_FORBIDDEN)
+        elif request.user.profile != 'INS' and request.user.profile != 'EMP':
+            return Response({"message": 'You cannot see the pilot data of another user'},
+                            status=status.HTTP_403_FORBIDDEN)
 
     data = serializer_pilot(pilot).data
     data['flights'] = serializer_flight(flights, many=True).data
@@ -160,7 +161,7 @@ def graduate_student(request, user_id):
     if user_pilot[0].profile != 'STU':
         return Response({"message": "User is not a student"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if pilot.get_flight_hours() >= 150:
+    if pilot[0].get_flight_hours() >= 150:
         pilot.update(license_number=request.data["license_number"])
         user_pilot.update(profile='PIL')
     else:

@@ -28,10 +28,13 @@ function AddEdit(props) {
             .required('Birth Date is required'),
         profile: Yup.string()
             .required('Profile is required'),
-        license_number: Yup.string()
+        license_number: Yup.number()
             .when('profile', {
                 is: ('PIL' || 'INS'),
-                then: Yup.string().required('Must enter license number'),
+                then: Yup.number()
+                    .typeError("Please enter a valid number")
+                    .required('License number is required')
+                    .min(1,"License number must be positive")
             }),
         institution_name: Yup.string()
             .when('profile', {

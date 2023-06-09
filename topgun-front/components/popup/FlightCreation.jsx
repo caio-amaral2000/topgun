@@ -18,8 +18,11 @@ function FlightCreation(props) {
     const validationSchema = Yup.object().shape({
         start_date: Yup.string()
             .required('Start date is required'),
-        duration: Yup.string()
-            .required('Duration is required'),
+        duration: Yup.number()
+            .typeError("Please enter a valid number")
+            .required('Duration is required')
+            .min(1, "Minimum flight time is 1")
+            .max(12, "Maximum flight time is 12"),
     });
 
     if(isStudent){

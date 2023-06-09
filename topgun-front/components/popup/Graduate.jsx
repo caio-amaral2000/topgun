@@ -15,8 +15,10 @@ function Graduate(props) {
     
     // form validation rules 
     const validationSchema = Yup.object().shape({
-        license_number: Yup.string()
-            .required('License number is required'),
+        license_number: Yup.number()
+            .typeError("Please enter a valid number")
+            .required('License number is required')
+            .min(1,"License number must be positive"),
 
     });
 
@@ -34,7 +36,7 @@ function Graduate(props) {
         return userService.graduateStudent(id, data)
             .then(() => {
                 alertService.success('Student graduated to pilot', { keepAfterRouteChange: true });
-                router.push(`./${id}`);
+                router.push('.');
             })
             .catch(alertService.error);
     }
