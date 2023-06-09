@@ -1,4 +1,4 @@
-import { FlightCreation, Graduate, Promote } from "components/popup";
+import { FlightCreation, Graduate, InstructedFlights, Promote } from "components/popup";
 import {Popup} from 'reactjs-popup';
 
 export { PilotData };
@@ -88,6 +88,9 @@ function PilotData(props){
             </Popup>}
             {pilotData.user.profile === 'PIL' && <Popup trigger={<button> Promote pilot </button>} position="right center">
                 <Promote pilotId={pilotData.user.id} ></Promote>
+            </Popup>}
+            {pilotData.user.profile === 'INS' && <Popup trigger={<button> See instructed flights </button>} position="right center">
+                <InstructedFlights pilotId={pilotData.user.id} ></InstructedFlights>
             </Popup>}
 
             <h2>Flights</h2>

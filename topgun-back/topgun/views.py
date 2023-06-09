@@ -137,10 +137,15 @@ def get_pilot_data(request, user_id):
 
 
 @api_view(['GET'])
-@permission_classes([InstructorPermission])
-def get_instructed_flights(request):
-    flights = Flight.objects.filter(instructor_id=request.user.id)
+@permission_classes([EmployeePermission | InstructorPermission])
+def get_instructed_flights(request, user_id):
+    instructor_id = Pilot.objects.get(user_id=user_id).id
+    flights = Flight.objects.filter(instructor_id=instructor_id)
     serializer = serializers.FlightSerializer
+
+    if request.user.profile == 'INS' and request.user.id != user_id:
+        return Response({"message": 'Instructors cannot see other instructors\' instructed flights'},
+                        status=status.HTTP_403_FORBIDDEN)
 
     data = serializer(flights, many=True).data
     return Response(data=data, status=status.HTTP_200_OK)

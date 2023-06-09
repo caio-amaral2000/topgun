@@ -20,6 +20,7 @@ export const userService = {
     createFlight,
     graduateStudent,
     promotePilot,
+    getInstructedFlights,
     delete: _delete
 };
 
@@ -66,6 +67,10 @@ function graduateStudent(id, data) {
 
 function promotePilot(id, data) {
     return fetchWrapper.put(`${baseUrl}/promote/${id}`, data);
+}
+
+function getInstructedFlights(id) {
+    return fetchWrapper.get(`${baseUrl}/instructed-flights/${id}`);
 }
 
 // prefixed with underscored because delete is a reserved word in javascript
