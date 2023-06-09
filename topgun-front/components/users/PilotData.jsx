@@ -1,5 +1,6 @@
 import { FlightCreation, Graduate, InstructedFlights, Promote } from "components/popup";
 import {Popup} from 'reactjs-popup';
+import { userService } from "services";
 
 export { PilotData };
 
@@ -11,6 +12,14 @@ function PilotData(props){
         'STU': 'Student',
         'PIL': 'Pilot',
         'INS': 'Instructor',
+    }
+
+    function canCreateFlight(){
+        if(pilotData.user.profile === 'STU'){
+            return userService.hasRole(['INS'])
+        } else {
+            return userService.hasRole(['EMP'])
+        }
     }
 
     return (
@@ -83,10 +92,10 @@ function PilotData(props){
                 </div>}
             </form>
 
-            {pilotData.flight_hours >= 150 && pilotData.user.profile === 'STU' && <Popup trigger={<button> Graduate student </button>} position="right center">
+            {userService.hasRole(['INS']) && pilotData.flight_hours >= 150 && pilotData.user.profile === 'STU' && <Popup trigger={<button> Graduate student </button>} position="right center">
                 <Graduate pilotId={pilotData.user.id} ></Graduate>
             </Popup>}
-            {pilotData.user.profile === 'PIL' && <Popup trigger={<button> Promote pilot </button>} position="right center">
+            {userService.hasRole(['EMP']) && pilotData.user.profile === 'PIL' && <Popup trigger={<button> Promote pilot </button>} position="right center">
                 <Promote pilotId={pilotData.user.id} ></Promote>
             </Popup>}
             {pilotData.user.profile === 'INS' && <Popup trigger={<button> See instructed flights </button>} position="right center">
@@ -94,9 +103,9 @@ function PilotData(props){
             </Popup>}
 
             <h2>Flights</h2>
-            <Popup trigger={<button> Create new flight </button>} position="right center">
+            {canCreateFlight() && <Popup trigger={<button> Create new flight </button>} position="right center">
                 <FlightCreation pilotId={pilotData.user.id} isStudent={pilotData.user.profile === 'STU'}></FlightCreation>
-            </Popup>
+            </Popup>}
             
             <table className="table table-striped">
                 <thead>

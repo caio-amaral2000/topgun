@@ -32,7 +32,7 @@ function Index() {
     return (
         <Layout>
             <h1>Users</h1>
-            <Link href="/users/add" className="btn btn-sm btn-success mb-2">Add User</Link>
+            {userService.hasRole(['EMP']) && <Link href="/users/add" className="btn btn-sm btn-success mb-2">Add User</Link>}
             <table className="table table-striped">
                 <thead>
                     <tr>

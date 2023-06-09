@@ -10,7 +10,7 @@ function Home() {
             <div className="container">
                 <h1>Hi {user.name}!</h1>
                 <p>Welcome to TOPGUN!</p>
-                <p><Link href={`/users/edit/${user.id}`}>See your pilot information</Link></p>
+                {userService.hasRole(['STU','PIL','INS']) && <p><Link href={`/users/edit/${user.id}`}>See your pilot information</Link></p>}
             </div>
         </div>
     );

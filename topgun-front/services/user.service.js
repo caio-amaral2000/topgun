@@ -11,6 +11,7 @@ const userSubject = new BehaviorSubject(process.browser && JSON.parse(localStora
 export const userService = {
     user: userSubject.asObservable(),
     get userValue () { return userSubject.value },
+    hasRole,
     login,
     logout,
     register,
@@ -23,6 +24,10 @@ export const userService = {
     getInstructedFlights,
     delete: _delete
 };
+
+function hasRole(profiles){
+    return profiles.includes(userSubject.value.profile)
+}
 
 function login(username, password) {
     return fetchWrapper.post(`${baseUrl}/login`, { username, password })
