@@ -152,7 +152,7 @@ def graduate_student(request, user_id):
     user_pilot = get_user_model().objects.filter(id=user_id)
     pilot = Pilot.objects.filter(user_id=user_id)
 
-    if user_pilot.profile != 'STU':
+    if user_pilot[0].profile != 'STU':
         return Response({"message": "User is not a student"}, status=status.HTTP_400_BAD_REQUEST)
 
     if pilot.get_flight_hours() >= 150:
@@ -171,7 +171,7 @@ def promote_pilot(request, user_id):
     user_pilot = get_user_model().objects.filter(id=user_id)
     pilot = Pilot.objects.filter(user_id=user_id)
 
-    if user_pilot.profile != 'PIL':
+    if user_pilot[0].profile != 'PIL':
         return Response({"message": "User is not a pilot"}, status=status.HTTP_400_BAD_REQUEST)
 
     serializer = serializers.InstructorDataSerializer(data=request.data)
