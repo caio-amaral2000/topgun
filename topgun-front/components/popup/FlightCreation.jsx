@@ -48,7 +48,7 @@ function FlightCreation(props) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className='bg-white border border-dark p-3'>
             <div className="form-group">
                 <label>Start date</label>
                 <input name="start_date" type="date" {...register('start_date')} className={`form-control ${errors.start_date ? 'is-invalid' : ''}`} />

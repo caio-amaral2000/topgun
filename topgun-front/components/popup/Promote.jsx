@@ -44,7 +44,7 @@ function Promote(props) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className='bg-white border border-dark p-3'>
             <div className="form-group">
                 <label>Institution name</label>
                 <input name="institution_name" type="text" {...register('institution_name')} className={`form-control ${errors.institution_name ? 'is-invalid' : ''}`} />

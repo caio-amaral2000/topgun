@@ -21,7 +21,7 @@ function InstructedFlights(props) {
     }, []);
 
     return (
-        <div>
+        <div className='bg-white border border-dark p-3'>
             <table className="table table-striped">
                 <thead>
                     <tr>

@@ -1,3 +1,5 @@
+import sqlite3
+
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
@@ -152,8 +154,12 @@ def graduate_student(request, user_id):
         return Response({"message": "User is not a student"}, status=status.HTTP_400_BAD_REQUEST)
 
     if pilot[0].get_flight_hours() >= 150:
-        pilot.update(license_number=request.data["license_number"])
-        user_pilot.update(profile='PIL')
+        try:
+            pilot.update(license_number=request.data["license_number"])
+            user_pilot.update(profile='PIL')
+        except sqlite3.IntegrityError:
+            return Response({"message": "This license number already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
     else:
         return Response({"message": "Student has not completed the mandatory flight hours"},
                         status=status.HTTP_400_BAD_REQUEST)

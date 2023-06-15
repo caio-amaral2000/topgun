@@ -42,7 +42,7 @@ function Graduate(props) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className='bg-white border border-dark p-3'>
             <div className="form-group">
                 <label>License number</label>
                 <input name="license_number" type="number" {...register('license_number')} className={`form-control ${errors.license_number ? 'is-invalid' : ''}`} />
